@@ -235,6 +235,23 @@ end)
 -- Third place is snail #5
 ```
 
+## Unhandled Rejections
+This is an implementation specific feature where promises that do not have a rejection handler and are rejected will lead to an error in the console. Here is an example:
+```lua
+d = deferred.new()
+d:reject("oh no!")
+-- Unhandled rejection: oh no!
+-- stack traceback:
+--         path/to/deferred.lua:187: in function '_handle'
+--         path/to/deferred.lua:46: in function 'reject'
+--         lua_run:1: in main chunk
+```
+Note that the first two lines of the traceback can be ignored. If you wish to disable this feature, add
+```lua
+DEBUG_IGNOREUNHANDLED = true
+```
+to your code before using any of the functions.
+
 ## Testing
 To test, use `lua_openscript path/to/deferred_test.lua` in your console. Or, you can include the `deferred_test.lua` file directly.
 
