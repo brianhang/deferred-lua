@@ -1,5 +1,5 @@
 # deferred-lua
-Lua implementation of the [Promises/A+](https://promisesaplus.com/) standard (not completely compliant due to some differences between JS and Lua) for Garry's Mod. One different is the `next` is used instead of `then` since `then` is a keyword in Lua. If you have never used promises before, you should check out [this explanation](https://codeburst.io/javascript-promises-explained-with-simple-real-life-analogies-dd6908092138). While this isn't JavaScript, the concepts are the same.
+Lua implementation of the [Promises/A+](https://promisesaplus.com/) standard (not completely compliant due to some differences between JS and Lua) for Garry's Mod. One big difference is the `next` is used instead of `then` since `then` is a keyword in Lua. If you have never used promises before, you should check out [this explanation](https://codeburst.io/javascript-promises-explained-with-simple-real-life-analogies-dd6908092138). While this isn't JavaScript, the concepts are the same.
 
 ## Installation
 Place the `deferred.lua` file somewhere and include it with
