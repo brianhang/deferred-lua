@@ -338,9 +338,9 @@ function deferred.filter(promises, filter)
 end
 
 function deferred.each(promises, fn)
-    return deferred.fold(promises, function(_, value)
+    return deferred.fold(promises, function(_, value, i, length)
         -- Ignore return value.
-        fn(value)
+        fn(value, i, length)
     end, nil):next(function()
         -- Clear the return value.
         return nil
