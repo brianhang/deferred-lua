@@ -113,6 +113,7 @@ function Promise:_handle(value)
                     return newValue
                 end, function(reason)
                     self:reject(reason)
+                    value.rejectionHandlerID = nil
                     return reason
                 end)
             elseif (value.state == FULFILLED) then
@@ -162,7 +163,10 @@ function Promise:_handle(value)
                 local status, result = pcall(onReject, value)
                 if (status) then
                     promise:_handle(result)
-                    UNHANDLED_PROMISES[self.rejectionHandlerID] = nil
+
+                    if (self.rejectionHandlerID) then
+                        UNHANDLED_PROMISES[self.rejectionHandlerID] = nil
+                    end
                 else
                     promise:reject(result)
                 end
