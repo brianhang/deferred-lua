@@ -1,5 +1,5 @@
 # deferred-lua
-Lua implementation of the [Promises/A+](https://promisesaplus.com/) standard (not completely compliant due to some differences between JS and Lua) for Garry's Mod. One different is the `next` is used instead of `then` since `then` is a keyword in Lua. If you have never used promises before, you should check out [this explanation](https://codeburst.io/javascript-promises-explained-with-simple-real-life-analogies-dd6908092138). While this isn't JavaScript, the concepts are the same.
+Lua implementation of the [Promises/A+](https://promisesaplus.com/) standard (not completely compliant due to some differences between JS and Lua) for Garry's Mod. One big difference is the `next` is used instead of `then` since `then` is a keyword in Lua. If you have never used promises before, you should check out [this explanation](https://codeburst.io/javascript-promises-explained-with-simple-real-life-analogies-dd6908092138). While this isn't JavaScript, the concepts are the same.
 
 ## Installation
 Place the `deferred.lua` file somewhere and include it with
@@ -234,6 +234,23 @@ end)
 -- Second place is snail #9
 -- Third place is snail #5
 ```
+
+## Unhandled Rejections
+This is an implementation specific feature where promises that do not have a rejection handler and are rejected will lead to an error in the console. Here is an example:
+```lua
+d = deferred.new()
+d:reject("oh no!")
+-- Unhandled rejection: oh no!
+-- stack traceback:
+--         path/to/deferred.lua:187: in function '_handle'
+--         path/to/deferred.lua:46: in function 'reject'
+--         lua_run:1: in main chunk
+```
+Note that the first two lines of the traceback can be ignored. If you wish to disable this feature, add
+```lua
+DEBUG_IGNOREUNHANDLED = true
+```
+to your code before using any of the functions.
 
 ## Testing
 To test, use `lua_openscript path/to/deferred_test.lua` in your console. Or, you can include the `deferred_test.lua` file directly.
