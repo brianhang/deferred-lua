@@ -362,14 +362,57 @@ local tests = {
             assert(result == 123, "reason not adopted")
         end)
     end,
-    function()
+    function(wait)
         local d = deferred.new()
         local d2 = deferred.new()
+        local result
         d2:reject(123)
         d:next(nil, function(value)
-            assert(value == 123, "pre-resolved value is not 123")
+            result = value
         end)
         d:resolve(d2)
+        wait(0.5, function()
+            assert(result == 123, "pre-rejected reason not adopted")
+        end)
+    end,
+    -- The same, when an already rejected promise is returned from next()
+    function(wait)
+        local result
+        deferred.resolve(1)
+            :next(function()
+                return deferred.reject(123)
+            end)
+            :next(function()
+                result = "fulfilled"
+            end, function(reason)
+                result = reason
+            end)
+        wait(0.5, function()
+            assert(result == 123, "rejection from next() not propagated")
+        end)
+    end,
+    -- ...and it keeps propagating through steps without a rejection handler
+    function(wait)
+        local result
+        deferred.resolve(1)
+            :next(function() return deferred.reject(123) end)
+            :next(function() result = "fulfilled" end)
+            :next(function() result = "fulfilled" end)
+            :catch(function(reason) result = reason end)
+        wait(0.5, function()
+            assert(result == 123, "rejection did not reach catch()")
+        end)
+    end,
+    -- ...and a catch() after it can recover the chain
+    function(wait)
+        local result
+        deferred.resolve(1)
+            :next(function() return deferred.reject(123) end)
+            :catch(function(reason) return reason + 1 end)
+            :next(function(value) result = value end)
+        wait(0.5, function()
+            assert(result == 124, "chain did not recover after catch()")
+        end)
     end,
 
     --
